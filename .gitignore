@@ -1,0 +1,8 @@
+.python-version
+SclSpc/SclSpc/__init__.pyc
+SclSpc/SclSpc/settings.pyc
+SclSpc/SclSpc/urls.pyc
+SclSpc/SclSpc/wsgi.pyc
+SclSpc/dataman/__init__.pyc
+SclSpc/dataman/admin.pyc
+SclSpc/dataman/models.pyc
