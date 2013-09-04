@@ -13,7 +13,8 @@ class Service(models.Model):
 #For tracking user movements by Name or Service UID
 class User(models.Model):
 	name = models.CharField(max_length=50, null=True)
-	uid = models.CharField(max_length=50)
+	uid = models.BigIntegerField()
+	userloc = models.CharField(max_length=500, null=True)
 	
 	def __unicode__(self):
 		if self.name:
@@ -24,7 +25,6 @@ class User(models.Model):
 #Location Model
 #Many to Many relationship with CheckIns and Pics
 class Location(models.Model):
-	name = models.CharField(max_length=50, null=True)
 	lon = models.FloatField()
 	lat = models.FloatField()
 	
@@ -39,6 +39,16 @@ class Location(models.Model):
 		else:
 			return u'%s , %s' % (self.lon, self.lat)
 	
+class Place(models.Model):
+	location = models.ForeignKey(Location)
+	
+	placeid = models.CharField(max_length=255)
+	placename = models.CharField(max_length=500)
+	placeurl = models.CharField(max_length=500)
+	
+	def __unicode__(self):
+		return u'%s ' % (self.placename)
+	
 #Tag Model
 #Many to Many relationship with CheckIns and Pics	
 class Tag(models.Model):
@@ -50,8 +60,12 @@ class Tag(models.Model):
 #CheckIn Model
 #Has one Service, Has one Location, Has many Tags
 class CheckIn(models.Model):
-	service = models.ForeignKey(Service)
 	location = models.ForeignKey(Location)
+	place = models.ForeignKey(Place)
+	
+	service = models.ForeignKey(Service)
+	message = models.CharField(max_length=255)
+	uid = models.BigIntegerField()
 	tags = models.ManyToManyField(Tag)
 	created_at = models.DateTimeField()
 	
