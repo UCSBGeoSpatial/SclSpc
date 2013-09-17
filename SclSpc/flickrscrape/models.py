@@ -1,5 +1,5 @@
 from django.db import models
-from dataman.models import Location
+from dataman.models import Location, Tag, Pic
 import flickrapi
 
 #Flickr Interface
@@ -61,12 +61,19 @@ class FlickrInterface(models.Model):
 				title = photo.attrib['title']
 				tags = photo.attrib['tags']
 				url = photo.attrib['url_l']
-				latitude = photo.attrib['latitude']
-				longitude = photo.attrib['longitude']
+				latitude = Float.parseFloat(photo.attrib['latitude'])
+				longitude = Float.parseFloat(photo.attrib['longitude'])
 			except KeyError:
 				continue
 				
 			if latitude && longitude && title:
+				#Need to add GEOPOINT object creation to fill point field
+				l = Location(lon = longitude, lat = latitude)
+				l.save()
+				
+				#Need to see if this is a legal way to set location foreign key
+				p = Pic(name = title, url = url, location = l)
+				p.save()
 				
 
 	# def geo_query(self, Location):
