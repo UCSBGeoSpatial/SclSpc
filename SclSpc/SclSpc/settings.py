@@ -18,6 +18,10 @@ DATABASES = {
         'PASSWORD': '$c1$pC!',
         'HOST': '127.0.0.1',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '',                      # Set to empty string for default.
+        # 'USER': 'marcus',
+        # 'PASSWORD': 'stko5',
+        # 'HOST': 'stko-poi.geog.ucsb.edu',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        # 'PORT': '',                      # Set to empty string for default.
     }
 }
 
@@ -122,7 +126,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 		'django.contrib.gis',
 		'django.contrib.admin',
-		'dataman'
+		'dataman',
+		'datascrape',
+		'flickrscrape'
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
