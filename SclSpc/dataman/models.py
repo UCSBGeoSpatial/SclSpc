@@ -27,10 +27,7 @@ class Location(models.Model):
 	objects = models.GeoManager()
 	
 	def __unicode__(self):
-		if self.name:
-			return u'%s' % (self.name)
-		else:
-			return u'%s , %s' % (self.lon, self.lat)
+		return u'%s , %s' % (self.lon, self.lat)
 	
 	
 #Place Model
@@ -42,7 +39,7 @@ class Place(models.Model):
 	name = models.CharField(max_length=500)
 	venueid = models.CharField(max_length=255)
 	
-	
+		
 	def __unicode__(self):
 		return u'%s ' % (self.name)
 	
@@ -52,7 +49,7 @@ class Tag(models.Model):
 	content = models.CharField(max_length=50)
 	
 	def __unicode__(self):
-		return content
+		return u'%s ' % (self.content)
 	
 #CheckIn Model
 #Has one Service, Has one Location, Has many Tags
@@ -74,12 +71,12 @@ class CheckIn(models.Model):
 #Pic Model
 #Has one Service, Has one Location, Has many Tags
 class Pic(models.Model):
-	service = models.ForeignKey('datascrape.Service')
+	service = models.ForeignKey('datascrape.Service', null=True)
 	location = models.ForeignKey(Location)
 	
-	name = models.CharField(max_length=50, null=True)
-	tags = models.ManyToManyField(Tag)
-	url = models.CharField(max_length=100)
+	name = models.CharField(max_length=200, null=True)
+	tags = models.ManyToManyField(Tag, null=True)
+	url = models.CharField(max_length=200)
 	created_at = models.DateTimeField()
 	
 	def __unicode__(self):
