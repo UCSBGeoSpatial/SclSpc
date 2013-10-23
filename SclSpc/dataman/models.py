@@ -74,15 +74,14 @@ class Pic(models.Model):
 	service = models.ForeignKey('datascrape.Service', null=True)
 	location = models.ForeignKey(Location)
 	
-	name = models.CharField(max_length=200, null=True)
+	name = models.CharField(max_length=2400, null=True)
 	tags = models.ManyToManyField(Tag, null=True)
-	url = models.CharField(max_length=200)
+	url = models.CharField(max_length=500)
 	created_at = models.DateTimeField()
 	
 	def __unicode__(self):
 		if self.name:
 			return u'%s' % (self.name)
 		else:
-			return "picture" + self.service + " " + self.created_at
-			return u'picture - %s %s' % (self.service, self.created_at)
+			return u'picture - %s' % (self.service)
 			

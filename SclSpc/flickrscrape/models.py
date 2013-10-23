@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import transaction, IntegrityError
 from dataman.models import Location, Tag, Pic
 from django.contrib.gis.geos import Point
 from datetime import datetime
@@ -33,22 +34,14 @@ class FlickrInterface(models.Model):
 		rad = 32
 		f = self._flickr_interface()
 		
-		photos = f.photos_search(lat = str(lat), lon = str(lon), rad = str(rad), extras = 'geo, tags, url_l, date_taken')
+		photos = f.photos_search(lat = str(lat), lon = str(lon), rad = str(rad), extras = 'geo, tags, url_l, date_taken', per_page = '100')
 		
 		thelist = photos.find('photos').findall('photo')
 		
 		return thelist
 		
 	def save_geo(self):
-		lat = 34.050238
-		lon = -118.244828
-		rad = 32
-		f = self._flickr_interface()
-		
-		photos = f.photos_search(lat = str(lat), lon = str(lon), rad = str(rad), extras = 'geo, tags, url_l, date_taken', per_page = '100')
-		
-		thelist = photos.find('photos').findall('photo')
-		
+		thelist = self.test_geo()
 		for photo in thelist:
 			try:
 				title = photo.attrib['title']
@@ -56,77 +49,65 @@ class FlickrInterface(models.Model):
 				url = photo.attrib['url_l']
 				latitude = float(photo.attrib['latitude'])
 				longitude = float(photo.attrib['longitude'])
-				c_at = datetime.strptime(photo.attrib['datetaken'], "%Y-%m-%d %H:%M:%S")
+				
+				#Location check
+				l = self.parse_location(latitude, longitude)
+				
+				#Pic check
+				if url:
+					try:
+						c_at = datetime.strptime(photo.attrib['datetaken'], "%Y-%m-%d %H:%M:%S")
+						self.parse_pic(title, l, url, c_at, tags)		
+					except:
+						continue
+			
 			except KeyError:
 				continue
-				
-			#Need to add GEOPOINT object creation to fill point field
+					
+		return thelist
+	
+	def parse_pic(self, title, l, url_l, c_at, tags):
+		
+		try:
+			p = Pic.objects.filter(url = url_l)[0]
+		except:
+			p = Pic(name = title, location = l, url = url_l, created_at = c_at)
+			try:
+				p.save()
+				self.parse_tags(p, tags)
+			except IntegrityError:
+				transaction.rollback()
+				print("An error has occured in saving the picture\n")
+		return p
+	
+	def parse_location(self, latitude, longitude):
+		#checks for existing location
+		l = Location.objects.filter(lon = longitude, lat = latitude)
+		if l:
+			l = l[0]
+		#if location doesn't exist
+		else:
 			pnt = Point(longitude, latitude)
 			l = Location(lon = longitude, lat = latitude, point = pnt)
 			if l.save():
 				print "Location Saved\n"
-			
-			#Need to see if this is a legal way to set location foreign key
-			p = Pic(name = title, location = l, created_at = c_at)
-			if url:
-				p.url = url
-			if p.save():
-				print "Pic Saved\n"
-			if tags:
-				for tag in tags:
-					print tag
-					t = Tag(content = tag)
-					if t.save():
-						print "Tag Saved\n"
-		return thelist
-	
-	#I'm using this to test.
-	#It takes the list returned from test_geo and prints
-	#the Title and the URL
-	# def print_data(self, thelist):
-	# 	for photo in thelist:
-	# 		try:
-	# 			title = photo.attrib['title']
-	# 			tags = photo.attrib['tags']
-	# 			url = photo.attrib['url_l']
-	# 			latitude = photo.attrib['latitude']
-	# 			longitude = photo.attrib['longitude']
-	# 			created_at = photo.attrib['date_taken']
-	# 		except KeyError:
-	# 			continue
-	# 			
-	# 		print title + ' ' + url
 		
-	#Need to test this.
-	#Should create new photo and location objects	
-	# def save_data(self, thelist):
-	# 	for photo in thelist:
-	# 		try:
-	# 			title = photo.attrib['title']
-	# 			tags = photo.attrib['tags'].split
-	# 			url = photo.attrib['url_l']
-	# 			latitude = float(photo.attrib['latitude'])
-	# 			longitude = float(photo.attrib['longitude'])
-	# 			c_at = photo.attrib['date_taken']
-	# 		except KeyError:
-	# 			continue
-	# 			
-	# 		if latitude and longitude and title:
-	# 			#Need to add GEOPOINT object creation to fill point field
-	# 			pnt = Point(longitude, latitude)
-	# 			l = Location(lon = longitude, lat = latitude, point = pnt, created_at = c_at)
-	# 			l.save()
-	# 			
-	# 			#Need to see if this is a legal way to set location foreign key
-	# 			p = Pic(name = title, location = l)
-	# 			if url:
-	# 				p.url = url
-	# 			p.save()
-	# 		if tags:
-	# 			for tag in tags:
-	# 				t = Tag(content = tag)
-	# 				t.save()
-	# 			
-
-	# def geo_query(self, Location):
+		return l
+	
+	def parse_tags(self, p, tags):
+		#Cycles thru picture tags
+		for tag in tags:
+			print tag
+			try:
+				t = Tag.objects.filter(content = tag)[0]
+				
+			except:
+				t = Tag(content = tag)
+				t.save()
+								
+			p.tags.add(t)
+				
+		return p.tags
+	
+	
 
