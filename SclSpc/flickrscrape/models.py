@@ -3,6 +3,7 @@ from django.db import transaction, IntegrityError
 from dataman.models import Location, Tag, Pic
 from django.contrib.gis.geos import Point
 from datetime import datetime
+
 import flickrapi
 
 #Flickr Interface
@@ -29,11 +30,14 @@ class FlickrInterface(models.Model):
 	#This method will return a list of photos within 32km of a Location object
 	# def test_geo(self, location):
 	def test_geo(self):
-		lat = 34.050238
-		lon = -118.244828
-		rad = 32
-		f = self._flickr_interface()
 		
+		all_locations = Location.objects.all()
+		seed = all_locations[randrange(len(all_locations))]
+		lat = seed.lat
+		lon = seed.lon
+		rad = 32    
+		
+		f = self._flickr_interface()
 		photos = f.photos_search(lat = str(lat), lon = str(lon), rad = str(rad), extras = 'geo, tags, url_l, date_taken', per_page = '100')
 		
 		thelist = photos.find('photos').findall('photo')

@@ -3,6 +3,7 @@ from django.db import transaction, IntegrityError
 from dataman.models import Location, Tag, Pic
 from django.contrib.gis.geos import Point
 from datetime import datetime
+from random import randrange
 import instagram
 
 #Instagram Interface
@@ -10,6 +11,7 @@ import instagram
 class InstagramInterface(models.Model):
   uid = models.CharField(max_length=150, null = False)
   secret = models.CharField(max_length=150, null = False)
+  
   
   def __unicode__(self):
     return u'Instagram Auth'
@@ -19,8 +21,11 @@ class InstagramInterface(models.Model):
     return i
     
   def test_geo(self):
-    lat = 34.050238
-    lon = -118.244828
+    
+    all_locations = Location.objects.all()
+    seed = all_locations[randrange(len(all_locations))]
+    lat = seed.lat
+    lon = seed.lon
     rad = 32    
     
     inst = self._instagram_interface()
@@ -87,7 +92,6 @@ class InstagramInterface(models.Model):
 	   tag = parsed.replace("Tag: ", "")
 	   try:
 	     t = Tag.objects.filter(content = tag)[0]
-	      
 	   except:
 	     t = Tag(content = tag)
 	     t.save()

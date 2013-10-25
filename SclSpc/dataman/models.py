@@ -1,4 +1,6 @@
 from django.contrib.gis.db import models
+from django.utils.encoding import smart_str
+
 import datascrape.models
 
 #User Model
@@ -81,7 +83,7 @@ class Pic(models.Model):
 	
 	def __unicode__(self):
 		if self.name:
-			return u'%s' % (self.name)
+			return u'%s' % (self.name.replace("\n", ""))
 		else:
 			return u'picture - %s' % (self.service)
 			
