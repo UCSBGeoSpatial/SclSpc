@@ -80,17 +80,17 @@ class InstagramInterface(models.Model):
     venue = location.id
     
     try:
-      p = Place.objects.filter(venueid = venue)[0]
-    except:
-      p = Place(venueid=venue, location=l)
-      p.save()
-    
-    try:
       l = Location.objects.filter(lon = longitude, lat = latitude)[0]
     except:
       pnt = Point(longitude, latitude)
       l = Location(lon = longitude, lat = latitude, point = pnt)
       l.save()
+      
+    try:
+      p = Place.objects.filter(venueid = venue)[0]
+    except:
+      p = Place(venueid=venue, location=l)
+      p.save()
       
     return l
   
