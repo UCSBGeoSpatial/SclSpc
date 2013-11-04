@@ -1,6 +1,6 @@
 from django.db import models
 from django.db import transaction, IntegrityError
-from dataman.models import Location, Tag, Pic
+from dataman.models import Location, Tag, Pic, Place
 from django.contrib.gis.geos import Point
 from datetime import datetime
 from random import randrange
@@ -44,7 +44,7 @@ class InstagramInterface(models.Model):
         c_at = photo.created_time
         
         #Location check
-        location = self.parse_location(photo.location.point)
+        location = self.parse_location(photo.location)
         
         #Create new pic
         p = self.parse_pic(caption, location, image, c_at)
@@ -74,15 +74,24 @@ class InstagramInterface(models.Model):
       
     return p
   
-  def parse_location(self, point):
-    latitude = point.latitude
-    longitude = point.longitude
+  def parse_location(self, location):
+    latitude = location.point.latitude
+    longitude = location.point.longitude
+    venue = location.id
+    
+    try:
+      p = Place.objects.filter(venueid = venue)[0]
+    except:
+      p = Place(venueid=venue, location=l)
+      p.save()
+    
     try:
       l = Location.objects.filter(lon = longitude, lat = latitude)[0]
     except:
       pnt = Point(longitude, latitude)
       l = Location(lon = longitude, lat = latitude, point = pnt)
       l.save()
+      
     return l
   
   def parse_tags(self, p, tags):

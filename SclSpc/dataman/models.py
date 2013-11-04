@@ -43,7 +43,10 @@ class Place(models.Model):
 	
 		
 	def __unicode__(self):
-		return u'%s ' % (self.name)
+		if self.name:
+			return u'%s ' % (self.name)
+		else:
+			return u'%s ' % (self.venueid)
 	
 #Tag Model
 #Many to Many relationship with CheckIns and Pics	
