@@ -1,12 +1,18 @@
-SclSpc
-======
+#SclSpc
 
-Social Space - social spatial data collector and analysis tool.
 
-Done:
-Currently only models and relationships are defined (SclSpc/dataman/models.py)
+Social Space - social geospatial data aggregator and analysis tool.
 
-Todo:
-Point database settings to UCSB server (SclSpc/SclSpc/settings.py)
-Migrate data from old DB table to new tables
-Model methods for interfacing with / collecting data from APIs
+##Done:
+- Currently only models and relationships are defined (SclSpc/dataman/models.py)
+- Flickr API Scrapes via point + radius
+- Instagram API Scrapes via point + radius
+- Dupe checks for pics, locations, and tags are all in place.
+
+##Todo:
+- Create CRON job to scrape Instagram constantly
+- Point database settings to UCSB server (SclSpc/SclSpc/settings.py)
+- Migrate data from old DB table to new tables
+- Include Twitter API
+
+
