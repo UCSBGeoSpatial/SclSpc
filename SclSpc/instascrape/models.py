@@ -29,7 +29,7 @@ class InstagramInterface(models.Model):
     rad = 32    
     
     inst = self._instagram_interface()
-    photos = inst.media_search(1, 100, lat, lon)
+    photos = inst.media_search(5000, 1000, lat, lon)
     
     return photos
     
