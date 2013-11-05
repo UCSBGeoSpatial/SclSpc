@@ -20,21 +20,38 @@ class InstagramInterface(models.Model):
     i = instagram.InstagramAPI(client_id = self.uid, client_secret = self.secret)
     return i
     
-  def test_geo(self):
-    
+  def overview_scrape(self):
     all_locations = Location.objects.all()
     seed = all_locations[randrange(len(all_locations))]
-    lat = seed.lat
-    lon = seed.lon
-    rad = 32    
-    
     inst = self._instagram_interface()
-    photos = inst.media_search(5000, 1000, lat, lon)
-    
+    photos = inst.media_search(5000, 1000, seed.lat, seed.lon)
+    #self.save_pics(photos)
     return photos
+
+  def spot_scrape(self):
+    all_places = Place.objects.all()
+    seed = all_places[randrange(len(all_places))]
+    inst = self._instagram_interface()
+    photos = inst.location_recent_media(100, None, seed.venueid)
+    #self.save_pics(photos)
+    return photos[0]
     
-  def save_geo(self):
-    thelist = self.test_geo()
+  def place_scrape(self):
+    all_places = Place.objects.all()
+    seed = all_places[randrange(len(all_places))]
+    
+    while seed.name:
+      seed = all_places[randrange(len(all_places))]
+      
+    inst = self._instagram_interface()
+    if seed.venueid != '0':
+      place = inst.location(seed.venueid)
+      seed.name = place.name
+      seed.save()
+    
+    return
+    
+  def save_pics(self, thelist):
     for photo in thelist:
         image = photo.images['standard_resolution'].url
         try:
@@ -55,13 +72,9 @@ class InstagramInterface(models.Model):
           self.parse_tags(p, tags)
         except:
           continue
-        
-    return thelist
+    return
   
   def parse_pic(self, title, l, url_l, c_at):
-    print title
-    print url_l
-    
     try:
       p = Pic.objects.filter(url = url_l)[0]
     except:
@@ -85,12 +98,13 @@ class InstagramInterface(models.Model):
       pnt = Point(longitude, latitude)
       l = Location(lon = longitude, lat = latitude, point = pnt)
       l.save()
-      
-    try:
-      p = Place.objects.filter(venueid = venue)[0]
-    except:
-      p = Place(venueid=venue, location=l)
-      p.save()
+    
+    if venue != None:  
+      try:
+        p = Place.objects.filter(venueid = venue)[0]
+      except:
+        p = Place(venueid=venue, location=l)
+        p.save()
       
     return l
   
