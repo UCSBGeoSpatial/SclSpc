@@ -4,6 +4,7 @@ from dataman.models import Location, Tag, Pic, Place
 from django.contrib.gis.geos import Point
 from datetime import datetime
 from random import randrange
+from django_cron import CronJobBase, Schedule
 import instagram
 
 #Instagram Interface
@@ -123,5 +124,18 @@ class InstagramInterface(models.Model):
 	      
     return
 
-  
+class overviewScrape(CronJobBase):
+  RUN_EVERY_MINS = 60 #every hour
+  schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
+  code = 'instascrape.overviewScrape'
+  def do(self):
+    inst = InstagramInterface.objects.all()[0]
+    photos = inst.overview_scrape()
+    try:
+      inst.save_pics(photos)
+    except:
+      print "An error has occured in saving pics"
 
+  CRON_CLASSES = [
+    "instascrape.cron.overviewScrape"
+  ]
