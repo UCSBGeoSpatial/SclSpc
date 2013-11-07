@@ -1,10 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.gis import admin
 from dataman import views
+import django_cron
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 admin.autodiscover()
+django_cron.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
