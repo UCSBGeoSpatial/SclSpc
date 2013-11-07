@@ -1,5 +1,5 @@
 from django_cron import CronJobBase, Schedule
-from instascrape import InstagramInterface
+from instascrape.models import InstagramInterface
 
 class overviewScrape(CronJobBase):
   RUN_EVERY_MINS = 120 #every hour
