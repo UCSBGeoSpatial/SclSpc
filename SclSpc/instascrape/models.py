@@ -37,17 +37,14 @@ class InstagramInterface(models.Model):
     return photos[0]
     
   def place_scrape(self):
-    all_places = Place.objects.all()
-    seed = all_places[randrange(len(all_places))]
+    all_places = Place.objects.filter(name = "")
     
-    while seed.name:
-      seed = all_places[randrange(len(all_places))]
-      
     inst = self._instagram_interface()
-    if seed.venueid != '0':
-      place = inst.location(seed.venueid)
-      seed.name = place.name
-      seed.save()
+    for seed in all_places:
+      if seed.venueid != '0':
+        place = inst.location(seed.venueid)
+        seed.name = place.name
+        seed.save()
     
     return
     
