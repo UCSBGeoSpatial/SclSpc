@@ -31,6 +31,22 @@ class Location(models.Model):
 	def __unicode__(self):
 		return u'%s , %s' % (self.lon, self.lat)
 	
+	
+#Place Model
+#Didn't want venue information correlated to raw Lat/Lon Location
+#Foursquare and Twitter info should be stored here
+class Place(models.Model):
+	location = models.ForeignKey(Location)
+	
+	name = models.CharField(max_length=500)
+	venueid = models.CharField(max_length=255)
+			
+	def __unicode__(self):
+		if self.name:
+			return u'%s ' % (self.name)
+		else:
+			return u'%s ' % (self.venueid)
+	
 #Tag Model
 #Many to Many relationship with CheckIns and Pics	
 class Tag(models.Model):
@@ -73,19 +89,3 @@ class Pic(models.Model):
 		else:
 			return u'picture - %s' % (self.service)
 			
-#Place Model
-#Didn't want venue information correlated to raw Lat/Lon Location
-#Foursquare and Twitter info should be stored here
-class Place(models.Model):
-	location = models.ForeignKey(Location)
-
-	name = models.CharField(max_length=500)
-	venueid = models.CharField(max_length=255)
-
-	count = len(Pic.objects.filter(location = self.location))
-
-	def __unicode__(self):
-		if self.name:
-			return u'%s ' % (self.name)
-		else:
-			return u'%s ' % (self.venueid)
