@@ -41,6 +41,7 @@ class Place(models.Model):
 	name = models.CharField(max_length=500)
 	venueid = models.CharField(max_length=255)
 	
+	count = len(Pics.objects.filter(location = self.location))
 		
 	def __unicode__(self):
 		if self.name:
