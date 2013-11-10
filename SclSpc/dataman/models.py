@@ -30,7 +30,17 @@ class Location(models.Model):
 	
 	def __unicode__(self):
 		return u'%s , %s' % (self.lon, self.lat)
+
+#Category Model
+#For Foursquare and Twitter
+class Category(models.Model):
+	name = models.CharField(max_length=500)
+	pluralName = models.CharField(max_length=500)
+	shortName = models.CharField(max_length=500)
+	fs_id = models.CharField(max_length=500)
 	
+	def __unicode__(self):
+		return u'%s ' % (self.name)
 	
 #Place Model
 #Didn't want venue information correlated to raw Lat/Lon Location
@@ -40,7 +50,11 @@ class Place(models.Model):
 	
 	name = models.CharField(max_length=500)
 	venueid = models.CharField(max_length=255)
-			
+	
+	foursq_id = models.CharField(max_length=255, null = True)
+	foursq_primary_cat = models.ForeignKey(Category, related_name='fs_prime', null = True)
+	foursq_categories = models.ManyToManyField(Category, null = True)
+	
 	def __unicode__(self):
 		if self.name:
 			return u'%s ' % (self.name)
