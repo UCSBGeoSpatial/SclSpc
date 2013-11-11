@@ -123,7 +123,7 @@ class InstagramInterface(models.Model):
 	     t = Tag.objects.filter(content = tag)[0]
 	   except:
 	     t = Tag(content = tag)
-        try:
+	     try:
 	       t.save()
 	       p.tags.add(t)
 	     except IntegrityError:
