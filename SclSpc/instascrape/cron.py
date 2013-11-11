@@ -8,8 +8,7 @@ class overviewScrape(CronJobBase):
   def do(self):
     inst = InstagramInterface.objects.all()[0]
     for i in range(0,4999):
-      photos = inst.overview_scrape()
       try:
-        inst.save_pics(photos)
+        photos = inst.overview_scrape()
       except:
         print "An error has occured in saving pics"

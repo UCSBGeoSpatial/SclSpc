@@ -25,7 +25,7 @@ class InstagramInterface(models.Model):
     seed = all_locations[randrange(len(all_locations))]
     inst = self._instagram_interface()
     photos = inst.media_search(5000, 1000, seed.lat, seed.lon)
-    #self.save_pics(photos)
+    self.save_pics(photos)
     return photos
 
   def spot_scrape(self):
@@ -33,8 +33,8 @@ class InstagramInterface(models.Model):
     seed = all_places[randrange(len(all_places))]
     inst = self._instagram_interface()
     photos = inst.location_recent_media(100, None, seed.venueid)
-    #self.save_pics(photos)
-    return photos[0]
+    self.save_pics(photos)
+    return photos
     
   def place_scrape(self):
     all_places = Place.objects.filter(name = "")
@@ -94,15 +94,24 @@ class InstagramInterface(models.Model):
     except:
       pnt = Point(longitude, latitude)
       l = Location(lon = longitude, lat = latitude, point = pnt)
-      l.save()
+      try:
+        l.save()
+      except IntegrityError:
+        transaction.rollback()
+        print("An error has occured in saving the picture\n")
+      
     
     if venue != None:  
       try:
         p = Place.objects.filter(venueid = venue)[0]
       except:
         p = Place(venueid=venue, location=l)
-        p.save()
-      
+        try:
+          p.save()
+        except IntegrityError:
+          transaction.rollback()
+          print("An error has occured in saving the picture\n")
+        
     return l
   
   def parse_tags(self, p, tags):
@@ -114,8 +123,12 @@ class InstagramInterface(models.Model):
 	     t = Tag.objects.filter(content = tag)[0]
 	   except:
 	     t = Tag(content = tag)
-	     t.save()
-	              
-	   p.tags.add(t)
+        try:
+	       t.save()
+	       p.tags.add(t)
+	     except IntegrityError:
+	       transaction.rollback()
+	       print("An error has occured in saving the picture\n")
+	   
 	      
     return
