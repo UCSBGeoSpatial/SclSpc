@@ -6,3 +6,7 @@ SclSpc/SclSpc/wsgi.pyc
 SclSpc/dataman/__init__.pyc
 SclSpc/dataman/admin.pyc
 SclSpc/dataman/models.pyc
+SclSpc/fourscrape/__init__.pyc
+SclSpc/fourscrape/admin.pyc
+SclSpc/fourscrape/models.pyc
+SclSpc/instascrape/models.pyc

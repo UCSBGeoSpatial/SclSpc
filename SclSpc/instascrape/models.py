@@ -1,5 +1,5 @@
 from django.db import models
-from django.db import transaction, IntegrityError
+from django.db import transaction, IntegrityError, connection
 from dataman.models import Location, Tag, Pic, Place
 from django.contrib.gis.geos import Point
 from datetime import datetime
@@ -20,12 +20,16 @@ class InstagramInterface(models.Model):
     i = instagram.InstagramAPI(client_id = self.uid, client_secret = self.secret)
     return i
     
+  def overview_locations(self):
+    cursor = connection.cursor()
+    cursor.execute("select st_astext(randompoint) as pt from RandomPoint((select geom from urban_areas where gid = 298))")
+    
   def overview_scrape(self):
     all_locations = Location.objects.all()
     seed = all_locations[randrange(len(all_locations))]
     inst = self._instagram_interface()
     photos = inst.media_search(5000, 1000, seed.lat, seed.lon)
-    self.save_pics(photos)
+    self.save_pics(photos)  
     return photos
 
   def spot_scrape(self):
@@ -37,10 +41,12 @@ class InstagramInterface(models.Model):
     return photos
     
   def place_scrape(self):
+    #Grabs all places without a name
     all_places = Place.objects.filter(name = "")
     
     inst = self._instagram_interface()
     for seed in all_places:
+      #If the venueid is defined, make the query
       if seed.venueid != '0':
         place = inst.location(seed.venueid)
         seed.name = place.name
@@ -65,7 +71,17 @@ class InstagramInterface(models.Model):
         
         #Tag attribution
         try:
+          
+          #Normal tags
           tags = photo.tags
+          
+          #Pulls hashtags out of the caption
+          parsed = caption.split(' ')
+          for word in parsed:
+            if word.startswith('#'):
+              tags.append(word.strip('#'))
+          
+          #Sends the whole enchilada
           self.parse_tags(p, tags)
         except:
           continue
@@ -78,7 +94,7 @@ class InstagramInterface(models.Model):
       p = Pic(name = title, location = l, url = url_l, created_at = c_at)
       try:
         p.save()
-      except IntegrityError:
+      except:
         transaction.rollback()
         print("An error has occured in saving the picture\n")
       
@@ -96,9 +112,9 @@ class InstagramInterface(models.Model):
       l = Location(lon = longitude, lat = latitude, point = pnt)
       try:
         l.save()
-      except IntegrityError:
+      except:
         transaction.rollback()
-        print("An error has occured in saving the picture\n")
+        print("An error has occured in saving the location\n")
       
     
     if venue != None:  
@@ -108,9 +124,9 @@ class InstagramInterface(models.Model):
         p = Place(venueid=venue, location=l)
         try:
           p.save()
-        except IntegrityError:
+        except:
           transaction.rollback()
-          print("An error has occured in saving the picture\n")
+          print("An error has occured in saving the place\n")
         
     return l
   
@@ -126,9 +142,9 @@ class InstagramInterface(models.Model):
 	     try:
 	       t.save()
 	       p.tags.add(t)
-	     except IntegrityError:
+	     except:
 	       transaction.rollback()
-	       print("An error has occured in saving the picture\n")
+	       print("An error has occured in saving the tag\n")
 	   
 	      
     return

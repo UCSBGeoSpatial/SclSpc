@@ -2,13 +2,26 @@ from django_cron import CronJobBase, Schedule
 from instascrape.models import InstagramInterface
 
 class overviewScrape(CronJobBase):
-  RUN_EVERY_MINS = 120 #every hour
+  RUN_EVERY_MINS = 120 #every 2 hours
   schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
   code = 'instascrape.overviewScrape'
   def do(self):
     inst = InstagramInterface.objects.all()[0]
     for i in range(0,4999):
       try:
-        photos = inst.overview_scrape()
-      except:
-        print "An error has occured in saving pics"
+        inst.overview_scrape()
+      except Exception, error:
+        print "An error has occured in the scrape loop!"
+        print str(error)
+        
+class placeScrape(CronJobBase):
+  RUN_EVERY_MINS = 240 #every 4 hours
+  schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
+  code = 'instascrape.placeScrape'
+  def do(self):
+    inst = InstagramInterface.objects.all()[0]
+    try:
+      inst.place_scrape()
+    except Exception, error:
+      print "An error has occured in while scraping places!"
+      print str(error)
