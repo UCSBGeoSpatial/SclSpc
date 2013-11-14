@@ -36,7 +36,7 @@ class Location(models.Model):
 	@classmethod	
 	def overview_locations(cls):
 		cursor = connection.cursor()
-		cursor.execute("select st_astext(randompoint) as pt from RandomPoint((select geom from urban_areas where gid = 298))")
+		cursor.execute("select st_astext(randompoint) as pt from RandomPoint((select geom from urban_areas where gid = 982))")
 		row = cursor.fetchone()
 		to_parse = str(row[0])
 		coords = re.findall(r'\d+(?:\.\d*)?', to_parse)
