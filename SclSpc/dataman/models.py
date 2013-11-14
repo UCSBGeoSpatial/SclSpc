@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.utils.encoding import smart_str
 from django.db import connection
+from django.contrib.gis.geos import Point
 import re
 import datascrape.models
 
