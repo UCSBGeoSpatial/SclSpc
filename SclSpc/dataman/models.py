@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models
 from django.utils.encoding import smart_str
 from django.db import connection
-
+import re
 import datascrape.models
 
 #User Model
@@ -39,8 +39,8 @@ class Location(models.Model):
 		row = cursor.fetchone()
 		to_parse = str(row[0])
 		coords = re.findall(r'\d+(?:\.\d*)?', to_parse)
-		lon = float('-' + match[0])
-		lat = float(match[1])
+		lon = float('-' + coords[0])
+		lat = float(coords[1])
 		p = Point(lon, lat)
 		l = Location(lon = lon, lat = lat, point = p)
 		return l
