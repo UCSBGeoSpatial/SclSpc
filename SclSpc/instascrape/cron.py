@@ -6,7 +6,8 @@ class overviewScrape(CronJobBase):
   schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
   code = 'instascrape.overviewScrape'
   def do(self):
-    inst = InstagramInterface.objects.all()[0]
+    all_inst = InstagramInterface.objects.all()
+    inst = all_inst[randrange(len(all_inst))]
     for i in range(0,4999):
       try:
         inst.overview_scrape()
@@ -19,7 +20,8 @@ class placeScrape(CronJobBase):
   schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
   code = 'instascrape.placeScrape'
   def do(self):
-    inst = InstagramInterface.objects.all()[0]
+    all_inst = InstagramInterface.objects.all()
+    inst = all_inst[randrange(len(all_inst))]
     try:
       inst.place_scrape()
     except Exception, error:
