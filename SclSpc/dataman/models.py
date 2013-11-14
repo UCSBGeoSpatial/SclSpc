@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.utils.encoding import smart_str
+from django.db import connection
 
 import datascrape.models
 
@@ -30,6 +31,20 @@ class Location(models.Model):
 	
 	def __unicode__(self):
 		return u'%s , %s' % (self.lon, self.lat)
+	
+	@classmethod	
+	def overview_locations(cls):
+		cursor = connection.cursor()
+		cursor.execute("select st_astext(randompoint) as pt from RandomPoint((select geom from urban_areas where gid = 298))")
+		row = cursor.fetchone()
+		to_parse = str(row[0])
+		coords = re.findall(r'\d+(?:\.\d*)?', to_parse)
+		lon = float('-' + match[0])
+		lat = float(match[1])
+		p = Point(lon, lat)
+		l = Location(lon = lon, lat = lat, point = p)
+		return l
+		
 
 #Category Model
 #For Foursquare and Twitter

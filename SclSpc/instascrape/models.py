@@ -1,5 +1,5 @@
 from django.db import models
-from django.db import transaction, IntegrityError, connection
+from django.db import transaction, IntegrityError
 from dataman.models import Location, Tag, Pic, Place
 from django.contrib.gis.geos import Point
 from datetime import datetime
@@ -20,13 +20,8 @@ class InstagramInterface(models.Model):
     i = instagram.InstagramAPI(client_id = self.uid, client_secret = self.secret)
     return i
     
-  def overview_locations(self):
-    cursor = connection.cursor()
-    cursor.execute("select st_astext(randompoint) as pt from RandomPoint((select geom from urban_areas where gid = 298))")
-    
   def overview_scrape(self):
-    all_locations = Location.objects.all()
-    seed = all_locations[randrange(len(all_locations))]
+    seed = Location.overview_locations()
     inst = self._instagram_interface()
     photos = inst.media_search(5000, 1000, seed.lat, seed.lon)
     self.save_pics(photos)  
