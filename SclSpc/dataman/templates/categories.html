@@ -9,23 +9,28 @@
     }
     </style>
     {% bootstrap_javascript_tag %}
- </head>
+</head>
 
 <body>
   <h2>SclSpc</h2>
 	<table>
-  	<tr>
-  	   <th> Place </th>
-  	   <th> Category </th>
-  	 </tr>
+  	 <tr>
+    	 <th> Place </th>
+    	 <th> Category </th>
+    	 <th> Venue </th>
+     </tr>
   {% for pic in pics_list %}
 		{% if pic.place %}
 		<tr>
 			<td> <i> {{pic.place.name}} </i> </td>
-			<td><h3> {{pic.name}} </h2></td>
+			<td> <i> {{pic.category.name}} </i> </td>
+			<td><b> {{pic.name}} </b></td>
 		</tr>
 		{% endif %}
 	{% endfor %}
   </table>
-  
+  <hr>
+  {% bootstrap_pagination pics_list url="/categories?page=1" align="center" size="large" %}
+
+
 </body>

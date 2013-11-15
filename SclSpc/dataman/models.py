@@ -119,3 +119,21 @@ class Pic(models.Model):
 		else:
 			return u'picture - %s' % (self.service)
 			
+	def place(self):
+		try:
+			p = Place.objects.filter(location = self.location)[0]
+			return p
+		except:
+			return False
+	
+	def category(self):
+		if self.place():
+			try:
+				category = self.place().foursq_primary_cat
+				return category
+			except:
+				return False
+		else:
+			return False
+			
+	

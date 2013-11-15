@@ -1,0 +1,30 @@
+{% load leaflet_tags %}
+
+<head>
+    {% leaflet_js %}
+    {% leaflet_css %}
+    
+    <script type="text/javascript">
+        function map_init_basic (map, options) {
+            {% for pic in pics_list %}
+              L.marker([{{pic.location.lat}}, {{pic.location.lon}}]).addTo(map).bindPopup("<h2>{{pic}}</h2> <img src={{pic.url}} height='300'>").openPopup();
+            {% endfor %}
+        }
+    </script>
+    
+    <style>
+    
+        .leaflet-container {  /* all maps */
+            width:  100%;
+            height: 100%;
+        }
+    </style>
+    
+ </head>
+
+<body>
+  <h2>SclSpc</h2>
+  {% leaflet_map "dataman" callback="window.map_init_basic" %}
+  
+  
+</body>
