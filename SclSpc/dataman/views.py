@@ -8,12 +8,12 @@ from models import Pic
 # Create your views here.
 
 def index(request):
-  pics_list = Pic.objects.all()
+  pics_list = Pic.objects.all()[:100]
   context = { 'pics_list' : pics_list }
   return render(request, 'index.html', context)
 
 def categories(request):
-  pics = Pic.objects.all()
+  pics = Pic.objects.all()[:1000]
   pics_list = []
   for pic in pics:
     if pic.category():
