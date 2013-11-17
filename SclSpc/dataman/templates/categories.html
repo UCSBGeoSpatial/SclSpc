@@ -6,6 +6,7 @@
     <style>
     table, th, tr, td{
       border: 1px solid black;
+      max-width:300px;
     }
     </style>
     {% bootstrap_javascript_tag %}
@@ -15,16 +16,25 @@
   <h2>SclSpc</h2>
 	<table>
   	 <tr>
-    	 <th> Place </th>
-    	 <th> Category </th>
     	 <th> Venue </th>
+    	 <th> Category </th>
+    	 <th> Caption </th>
+    	 <th> Tags </th>
      </tr>
   {% for pic in pics_list %}
 		{% if pic.place %}
 		<tr>
+  		 <td></td>
+  		 <td></td>
+  	     <td> <img src={{pic.url}} height='300'> </td>
+  	   </tr>
+		<tr>
 			<td> <i> {{pic.place.name}} </i> </td>
 			<td> <i> {{pic.category.name}} </i> </td>
 			<td><b> {{pic.name}} </b></td>
+			{%  for tag in tags %}
+			 <td> {{ tag.content }} </td>
+			{%  endfor %}
 		</tr>
 		{% endif %}
 	{% endfor %}
