@@ -31,7 +31,7 @@ class InstagramInterface(models.Model):
     all_places = Place.objects.all()
     seed = all_places[randrange(len(all_places))]
     inst = self._instagram_interface()
-    photos = inst.location_recent_media(100, None, seed.venueid)
+    photos = inst.location_recent_media(100, None, seed.venueid)[0]
     self.save_pics(photos)
     return photos
     
