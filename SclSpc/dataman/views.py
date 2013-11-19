@@ -8,9 +8,20 @@ from models import Pic
 # Create your views here.
 
 def index(request):
-  pics_list = Pic.objects.all()[:1000]
-  context = { 'pics_list' : pics_list }
-  return render(request, 'index.html', context)
+  pics = Pic.objects.all()[:1000]
+  pics_list = []
+  for pic in pics:
+    if pic.place():
+      pics_list.append(pic)
+  paginator = Paginator(pics_list, 10)
+  page = request.GET.get('page')
+  try:
+    show_lines = paginator.page(page)
+  except PageNotAnInteger:
+    show_lines = paginator.page(1)
+  except EmptyPage:
+    show_lines = paginator.page(paginator.num_pages)
+  return render_to_response('index.html', RequestContext(request, {'pics_list': show_lines}))
 
 def categories(request):
   pics = Pic.objects.all()[:100]
