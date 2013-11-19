@@ -8,11 +8,7 @@ from models import Pic
 # Create your views here.
 
 def index(request):
-  pics = Pic.objects.filter(location__place__name__isnull = False)[:100]
-  pics_list = []
-  for pic in pics:
-    if pic.place():
-      pics_list.append(pic)
+  pics_list = Pic.objects.filter(location__place__name__isnull = False).exclude(location__place__name = '0')[:100]
   paginator = Paginator(pics_list, 10)
   page = request.GET.get('page')
   try:
@@ -24,11 +20,7 @@ def index(request):
   return render_to_response('index.html', RequestContext(request, {'pics_list': show_lines}))
 
 def categories(request):
-  pics = Pic.objects.all()[:100]
-  pics_list = []
-  for pic in pics:
-    if pic.category():
-      pics_list.append(pic)
+  pics_list = Pic.objects.filter(location__place__foursq_primary_cat__isnull = False).[:100]
   paginator = Paginator(pics_list, 10)
   page = request.GET.get('page')
   try:
