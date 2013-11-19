@@ -32,9 +32,10 @@
       <td> <i> {{pic.place.name}} </i> </td>
       <td> <i> {{pic.category.name}} </i> </td>
       <td><b> {{pic.name}} </b></td>
-      {%  for tag in tags %}
-       <td> {{ tag.content }} </td>
-      {%  endfor %}
+      <td>{%  for tag in pic.tags.all %}
+        <i>{{ tag.content }}</i>
+          {%  endfor %}
+      </td>
     </tr>
     {% endif %}
   {% endfor %}
