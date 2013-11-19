@@ -4,6 +4,7 @@ from django.db import connection
 from django.contrib.gis.geos import Point
 import re
 import datascrape.models
+from datetime import datetime, timedelta
 
 #User Model
 #For tracking user movements by Name or Service UID
@@ -118,6 +119,9 @@ class Pic(models.Model):
 			return u'%s' % (self.name.replace("\n", ""))
 		else:
 			return u'picture - %s' % (self.service)
+	
+	def created(self):
+		return self.created_at - timedelta(hours=8)
 			
 	def place(self):
 		try:
