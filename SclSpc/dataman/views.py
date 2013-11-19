@@ -8,7 +8,7 @@ from models import Pic
 # Create your views here.
 
 def index(request):
-  pics = Pic.objects.all()[:1000]
+  pics = Pic.objects.all()[:100]
   pics_list = []
   for pic in pics:
     if pic.place():
