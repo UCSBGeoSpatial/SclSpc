@@ -30,3 +30,4 @@ def categories(request):
   except EmptyPage:
     show_lines = paginator.page(paginator.num_pages)
   return render_to_response('categories.html', RequestContext(request, {'pics_list': show_lines}))
+  
