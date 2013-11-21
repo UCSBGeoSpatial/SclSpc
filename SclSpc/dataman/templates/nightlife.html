@@ -1,0 +1,49 @@
+{% load bootstrap_toolkit %}
+
+<head>
+    {% bootstrap_stylesheet_tag %}
+    {% bootstrap_stylesheet_tag "responsive" %}
+    <style>
+    table, th, tr, td{
+      border: 1px solid black;
+      max-width:300px;
+    }
+    </style>
+    {% bootstrap_javascript_tag %}
+</head>
+
+<body>
+  <h2>SclSpc</h2>
+	<table>
+  	 <tr>
+    	 <th> Venue </th>
+    	 <th> Category </th>
+    	 <th> Caption </th>
+    	 <th> Tags </th>
+    	 <th> Created At </th>
+     </tr>
+  {% for pic in pics_list %}
+		{% if pic.place %}
+		<tr>
+  		 <td></td>
+  		 <td></td>
+  	     <td> <img src={{pic.url}} height='300'> </td>
+  	   </tr>
+		<tr>
+			<td> <i> {{pic.place.name}} </i> </td>
+			<td> <i> {{pic.category.name}} </i> </td>
+			<td><b> {{pic.name}} </b></td>
+          <td>{%  for tag in pic.tags.all %}
+			<i>{{ tag.content }},</i>
+			{%  endfor %}
+		    </td>
+		    <td> {{pic.created}} </td>
+		</tr>
+		{% endif %}
+	{% endfor %}
+  </table>
+  <hr>
+  {% bootstrap_pagination pics_list url="/nightlife?page=1" align="center" size="large" %}
+
+
+</body>
