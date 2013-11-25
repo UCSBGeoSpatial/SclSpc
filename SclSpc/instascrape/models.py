@@ -37,7 +37,7 @@ class InstagramInterface(models.Model):
     
   def place_scrape(self):
     #Grabs all places without a name
-    all_places = Place.objects.filter(name = "")
+    all_places = Place.objects.filter(name = "").exclude(venueid=0).exclude(venueid='0')
     
     inst = self._instagram_interface()
     for seed in all_places:

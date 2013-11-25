@@ -1,8 +1,7 @@
 from django.contrib.gis import admin
 from models import Location, Pic, CheckIn, Place, Tag, Category
 
-class PicAdmin(admin.ModelAdmin):
-  
+class PicAdmin(admin.ModelAdmin):  
   list_display = ('name', 'place', 'category', 'created')
   ordering = ('-created_at',)
 

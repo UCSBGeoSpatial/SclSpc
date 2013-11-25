@@ -1,0 +1,28 @@
+{%  extends 'base.html' %}
+{%  block header %}
+  <h3> {{venue.name}}</h2>
+  <h4> {{venue.foursq_primary_cat.name }} </h3>
+  <i> Pics in the last two hours: <b> {{ venue.inst_hour }} </b> </i><br>
+  <i> Pics today: <b> {{ venue.inst_today }} </b> </i><br>
+{% endblock %}
+
+{% block feed %}
+  <table>
+   <tr>
+    <th> Instagram Picture </th>
+    <th> Caption </th>
+    <th> Tags </th>
+    <th> Timestamp </th>
+  </tr>
+  {% for pic in venue.pics %}
+  <tr>
+    <td> <img src={{pic.url}} height='300'> </td>
+    <td> <b> {{pic.name}} </b> </td>
+    <td>
+      {% for tag in pic.tags.all %}
+        <i> {{ tag.content }}, </i>
+      {% endfor %}
+    </td>
+    <td> {{ pic.created }}</td>
+  {% endfor %}
+{% endblock %}

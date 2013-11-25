@@ -1,0 +1,39 @@
+{% load bootstrap_toolkit %}
+
+<head>
+    {% bootstrap_stylesheet_tag %}
+    {% bootstrap_stylesheet_tag "responsive" %}
+    <style>
+    table, th, tr, td{
+      border: 1px solid black;
+      width:300px;
+    }
+    </style>
+    {% bootstrap_javascript_tag %}
+    {% block scripts %}{% endblock %}
+</head>
+
+<body>
+<div class="container-fluid">
+  <header class="row-fluid">
+    <div class="row span3">
+      <h2>SclSpc</h2>
+    </div>
+  </header>
+  <div class="row-fluid">
+    <div id = "sidebar" class = "span4 offset0 pull-left">
+      <div class="span4">
+      {% block header %} {% endblock %}
+      </div>
+    </div>
+    <div id = "content" class = "span6 offset4">
+      {% block content %}{% endblock %}
+      <div id= "feed" class = "span4 offset2">
+        {% block feed %}{% endblock %}
+      </div>
+    </div>
+</div>
+
+</div>  
+  
+</body>

@@ -1,6 +1,7 @@
 from django.contrib.gis.db import models
 from django.utils.encoding import smart_str
 from django.db import connection
+from django.db.models import Count, F
 from django.contrib.gis.geos import Point
 import re
 import datascrape.models
@@ -10,14 +11,14 @@ from datetime import datetime, timedelta
 #For tracking user movements by Name or Service UID
 class User(models.Model):
 	name = models.CharField(max_length=50, null=True)
-
-	credentials = models.ManyToManyField('datascrape.ServiceInfo')
+	twitter_handle = models.CharField(max_length=50, null=True, blank=True)
+	foursq_id = models.CharField(max_length=150, null=True, blank=True)
 
 	def __unicode__(self):
 		if self.name:
 			return u'%s' % (self.name)
 		else:
-			return u'%s' % (self.uid)
+			return u'%s' % (self.twitter_handle)
 
 
 #Location Model
@@ -71,12 +72,30 @@ class Place(models.Model):
 	foursq_id = models.CharField(max_length=255, null = True)
 	foursq_primary_cat = models.ForeignKey(Category, related_name='fs_prime', null = True)
 	foursq_categories = models.ManyToManyField(Category, null = True)
+	twitter_handle = models.CharField(max_length=50, null=True, blank=True)
+	
+	@classmethod
+	def top_places(cls):		
+		#This is ranked by number of pics
+		#Need to account for specific time delta
+		return Place.objects.all().annotate(pic_count=Count('location__pic')).order_by('-pic_count') 
 	
 	def __unicode__(self):
 		if self.name:
 			return u'%s ' % (self.name)
 		else:
 			return u'%s ' % (self.venueid)
+			
+	def pics(self):
+		return self.location.pic_set.all()
+		
+	def inst_hour(self):
+		count = self.location.pic_set.filter(created_at__gt = F('created_at') + timedelta(hours=2)).count()
+		return count 
+		
+	def inst_today(self):
+		count = self.location.pic_set.filter(created_at__gt = F('created_at') + timedelta(days=1)).count()
+		return count 		
 	
 #Tag Model
 #Many to Many relationship with CheckIns and Pics	

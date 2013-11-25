@@ -1,10 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
 from django.db.models import Q
-from models import Pic
+from models import Pic, Place
 # Create your views here.
 
 def index(request):
@@ -44,3 +44,12 @@ def nightlife(request):
   except EmptyPage:
     show_lines = paginator.page(paginator.num_pages)
   return render_to_response('nightlife.html', RequestContext(request, {'pics_list': show_lines}))
+
+def venue(request, venue_id):
+    try:
+      v = Place.objects.get(id=venue_id)
+    except:
+      raise Http404
+    return render_to_response('venue.html', {'venue':v})
+    
+    

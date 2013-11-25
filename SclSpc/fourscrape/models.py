@@ -42,6 +42,10 @@ class FoursquareInterface(models.Model):
         if seed['location']['distance'] == 0:
           place.foursq_id = seed['id']
           try:
+            place.twitter_handle = seed['contact']['twitter']
+          except:
+            continue
+          try:
             self.parse_cats(place, seed['categories'])
           except:
             continue

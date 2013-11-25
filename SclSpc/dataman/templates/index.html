@@ -1,19 +1,6 @@
+{%  extends 'base.html' %}
 {% load bootstrap_toolkit %}
-
-<head>
-    {% bootstrap_stylesheet_tag %}
-    {% bootstrap_stylesheet_tag "responsive" %}
-    <style>
-    table, th, tr, td{
-      border: 1px solid black;
-      max-width:300px;
-    }
-    </style>
-    {% bootstrap_javascript_tag %}
-</head>
-
-<body>
-  <h2>SclSpc</h2>
+{% block content %}
   <table>
      <tr>
        <th> Venue </th>
@@ -30,7 +17,8 @@
          <td> <img src={{pic.url}} height='300'> </td>
        </tr>
     <tr>
-      <td> <i> {{pic.place.name}} </i> </td>
+      
+      <td> <li><a href="/venue/{{ pic.place.id }}/">{{ pic.place.name }}</a></li> </td>
       <td> <i> {{pic.category.name}} </i> </td>
       <td><b> {{pic.name}} </b></td>
       <td>{%  for tag in pic.tags.all %}
@@ -45,5 +33,5 @@
   <hr>
   {% bootstrap_pagination pics_list url="/?page=1" align="center" size="large" %}
 
+{% endblock %}
 
-</body>

@@ -18,5 +18,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index, name = 'index'),
     url(r'^categories$', views.categories, {}, 'categories'),
-    url(r'^nightlife$', views.nightlife, {}, 'nightlife')
+    url(r'^nightlife$', views.nightlife, {}, 'nightlife'),
+    url(r'^venue/(\d+)/$', views.venue, {}, 'venue')
 )
