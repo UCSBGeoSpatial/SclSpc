@@ -3,7 +3,7 @@ from instascrape.models import InstagramInterface
 from random import randrange
 
 class overviewScrape(CronJobBase):
-  RUN_EVERY_MINS = 120 #every 2 hours
+  RUN_EVERY_MINS = 180 #every 3 hours
   schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
   code = 'instascrape.overviewScrape'
   def do(self):
@@ -17,7 +17,7 @@ class overviewScrape(CronJobBase):
         print str(error)
         
 class placeScrape(CronJobBase):
-  RUN_EVERY_MINS = 60 #every hour
+  RUN_EVERY_MINS = 120 #every 2 hours
   schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
   code = 'instascrape.placeScrape'
   def do(self):

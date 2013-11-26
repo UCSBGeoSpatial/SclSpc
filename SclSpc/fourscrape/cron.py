@@ -2,7 +2,7 @@ from django_cron import CronJobBase, Schedule
 from fourscrape.models import FoursquareInterface
 
 class catScrape(CronJobBase):
-  RUN_EVERY_MINS = 60 #every hour
+  RUN_EVERY_MINS = 120 #every hour
   schedule = Schedule(run_every_mins = RUN_EVERY_MINS)
   code = 'fourscrape.catScrape'
   def do(self):

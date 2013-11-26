@@ -43,10 +43,12 @@ class InstagramInterface(models.Model):
     for seed in all_places:
       #If the venueid is defined, make the query
       if seed.venueid != '0':
-        place = inst.location(seed.venueid)
-        seed.name = place.name
-        seed.save()
-    
+        try:
+          place = inst.location(seed.venueid)
+          seed.name = place.name
+          seed.save()
+        except:
+          continue
     return
     
   def save_pics(self, thelist):
