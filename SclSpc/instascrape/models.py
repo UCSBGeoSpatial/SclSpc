@@ -74,7 +74,7 @@ class InstagramInterface(models.Model):
           tags = photo.tags
           
           #Pulls hashtags out of the caption
-			caption = caption.replace('#', ' #')
+          caption = caption.replace('#', ' #')
           parsed = caption.split(' ')
           for word in parsed:
             if word.startswith('#'):
