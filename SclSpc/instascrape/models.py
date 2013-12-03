@@ -1,7 +1,6 @@
 from django.db import models
 from django.db import transaction, IntegrityError
 from dataman.models import Location, Tag, Pic, Place
-from common.functions import parse_location, parse_tags
 from django.contrib.gis.geos import Point
 from datetime import datetime
 from random import randrange
