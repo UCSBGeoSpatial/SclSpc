@@ -1,9 +1,5 @@
 from django.db import models
-from django.db import transaction, IntegrityError
 from dataman.models import Place, Category
-from django.contrib.gis.geos import Point
-from datetime import datetime
-from random import randrange
 import foursquare
 
 class FoursquareInterface(models.Model):

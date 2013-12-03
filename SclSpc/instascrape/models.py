@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import transaction, IntegrityError
 from dataman.models import Location, Tag, Pic, Place
+from common.functions import parse_location, parse_tags
 from django.contrib.gis.geos import Point
 from datetime import datetime
 from random import randrange
@@ -73,6 +74,7 @@ class InstagramInterface(models.Model):
           tags = photo.tags
           
           #Pulls hashtags out of the caption
+			caption = caption.replace('#', ' #')
           parsed = caption.split(' ')
           for word in parsed:
             if word.startswith('#'):
@@ -136,8 +138,8 @@ class InstagramInterface(models.Model):
 	     t = Tag.objects.filter(content = tag)[0]
 	   except:
 	     t = Tag(content = tag)
+	     t.save()
 	     try:
-	       t.save()
 	       p.tags.add(t)
 	     except:
 	       transaction.rollback()

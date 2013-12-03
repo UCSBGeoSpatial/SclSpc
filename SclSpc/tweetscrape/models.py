@@ -5,19 +5,22 @@ from django.contrib.gis.geos import Point
 from datetime import datetime
 from twython import Twython, TwythonStreamer
 
-#Twitter Interface
-#Twitter API info
+#Twitter Stream Interface
+#Handles the firehouse
 class _stream_interface(TwythonStreamer):
   def on_success(self, data):
-    if "Foursquare" in data['source']:
+    if "foursquare" in data['source']:
       print data['text']
       print data['coordinates']['coordinates'][0]
       print data['coordinates']['coordinates'][1]
       print data['user']['screen_name']
+      print data['entities']['hashtags']
       
   def on_error(self, status_code, data):
     print status_code
-      
+
+#Twitter Interface
+#Holds API info and initializes the scraper
 class TwitterInterface(models.Model):
   key = models.CharField(max_length=150, null = False)
   secret = models.CharField(max_length=150, null = False)

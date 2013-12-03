@@ -90,11 +90,11 @@ class Place(models.Model):
 		return self.location.pic_set.all()
 		
 	def inst_hour(self):
-		count = self.location.pic_set.filter(created_at__gt = F('created_at') + timedelta(hours=2)).count()
+		count = self.location.pic_set.filter(created_at__gt = F('created_at') - timedelta(hours=2)).count()
 		return count 
 		
 	def inst_today(self):
-		count = self.location.pic_set.filter(created_at__gt = F('created_at') + timedelta(days=1)).count()
+		count = self.location.pic_set.filter(created_at__gt = F('created_at') - timedelta(days=1)).count()
 		return count 		
 	
 #Tag Model
