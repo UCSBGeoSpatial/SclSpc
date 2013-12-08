@@ -87,15 +87,19 @@ class Place(models.Model):
 			return u'%s ' % (self.venueid)
 			
 	def pics(self):
-		return self.location.pic_set.all()
+		return self.location.pic_set.all().order_by('created_at').reverse()
 		
 	def inst_hour(self):
-		count = self.location.pic_set.filter(created_at__gt = F('created_at') - timedelta(hours=2)).count()
+		count = self.location.pic_set.filter(created_at__gte = datetime.now() - timedelta(hours=2)).count()
 		return count 
 		
 	def inst_today(self):
-		count = self.location.pic_set.filter(created_at__gt = F('created_at') - timedelta(days=1)).count()
+		count = self.location.pic_set.filter(created_at__gte = datetime.now() - timedelta(days=1)).count()
 		return count 		
+	
+	def inst_ever(self):
+		count = self.location.pic_set.all().count()
+		return count
 	
 #Tag Model
 #Many to Many relationship with CheckIns and Pics	
