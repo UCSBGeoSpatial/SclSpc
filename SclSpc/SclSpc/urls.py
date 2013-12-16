@@ -19,5 +19,6 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name = 'index'),
     url(r'^categories$', views.categories, {}, 'categories'),
     url(r'^nightlife$', views.nightlife, {}, 'nightlife'),
-    url(r'^venue/(\d+)/$', views.venue, {}, 'venue')
+    url(r'^venue/(\d+)/$', views.venue, {}, 'venue'),
+    url(r'^venue_json/(\d+)/$', views.venue_json, {}, 'venue_json')
 )
