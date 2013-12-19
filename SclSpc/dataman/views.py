@@ -2,13 +2,12 @@ from django.http import HttpResponse, Http404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
-from django.db.models import Q
+from django.db.models import Q, Count
+from restless.views import Endpoint
 from django.core import serializers
 from models import Pic, Place
-# Create your views here.
-def date_handler(obj):
-  return obj.isoformat() if hasattr(obj, 'isoformat') else obj
-  
+
+
 def index(request):
   pics_list = Pic.objects.filter(location__place__name__isnull = False).exclude(location__place__name = '0').order_by('created_at').reverse()[:100]
   paginator = Paginator(pics_list, 10)
@@ -46,6 +45,7 @@ def nightlife(request):
   except EmptyPage:
     show_lines = paginator.page(paginator.num_pages)
   return render_to_response('nightlife.html', RequestContext(request, {'pics_list': show_lines}))
+  
     
 def venue(request, venue_id):
   try:

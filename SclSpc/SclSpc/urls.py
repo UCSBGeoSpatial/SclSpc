@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.gis import admin
 from dataman import views
+from dataman.api import GetNightlifeList, GetVenueList
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -19,6 +20,8 @@ urlpatterns = patterns('',
     url(r'^$', views.index, name = 'index'),
     url(r'^categories$', views.categories, {}, 'categories'),
     url(r'^nightlife$', views.nightlife, {}, 'nightlife'),
+    url(r'^nightlife_json$', GetNightlifeList.as_view()),    
+    url(r'^venue_list$', GetVenueList.as_view()),
     url(r'^venue/(\d+)/$', views.venue, {}, 'venue'),
     url(r'^venue_json/(\d+)/$', views.venue_json, {}, 'venue_json')
 )
