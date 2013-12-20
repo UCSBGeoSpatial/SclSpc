@@ -23,7 +23,7 @@ class GetNightlifeList(Endpoint):
 
 class GetVenueList(Endpoint):
 	def get(self, request):
-		venues_list = Place.objects.all().annotate(pic_count=Count('location__pic')).order_by('pic_count').reverse()[:10]
+		venues_list = Place.objects.all().annotate(pic_count=Count('location__pic')).annotate(preview='location__pic').order_by('pic_count').reverse()[:10]
 		fields = ('id', 'name', 'pic_count',
 			('foursq_primary_cat', dict(
 				fields = [

@@ -59,7 +59,7 @@ class Category(models.Model):
 	
 	def __unicode__(self):
 		return u'%s ' % (self.name)
-		
+
 #Place Model
 #Didn't want venue information correlated to raw Lat/Lon Location
 #Foursquare and Twitter info should be stored here
@@ -86,11 +86,9 @@ class Place(models.Model):
 		else:
 			return u'%s ' % (self.venueid)
 			
-	def pics(self, limit=0):
-		if limit != 0:
-			return self.location.pic_set.all().order_by('created_at').reverse()[:limit]
-		else:
-			return self.location.pic_set.all().order_by('created_at').reverse()
+	def last_pic(self):
+		pic = self.location.pic_set.all().order_by('created_at').reverse()[:1][0]
+		return pic.url
 		
 	def inst_hour(self):
 		count = self.location.pic_set.filter(created_at__gte = datetime.now() - timedelta(hours=2)).count()
@@ -107,6 +105,12 @@ class Place(models.Model):
 	def inst_with_delta(self, delta):
 		picset = self.location.pic_set.filter(created_at__gte=datetime.now() - timedelta(hours = delta))
 		return picset
+
+	def lat(self):
+		return self.location.lat
+
+	def lon(self):
+		return self.location.lon
 		
 #Tag Model
 #Many to Many relationship with CheckIns and Pics	

@@ -17,11 +17,14 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index, name = 'index'),
-    url(r'^categories$', views.categories, {}, 'categories'),
-    url(r'^nightlife$', views.nightlife, {}, 'nightlife'),
-    url(r'^nightlife_json$', GetNightlifeList.as_view()),    
-    url(r'^venue_list$', GetVenueList.as_view()),
-    url(r'^venue/(\d+)/$', views.venue, {}, 'venue'),
-    url(r'^venue_json/(\d+)/$', views.venue_json, {}, 'venue_json')
+    url(r'^api/venues/$', views.PlaceList.as_view()),
+    url(r'^api/venues/(\d+)/$', views.PlaceDetail.as_view()),
+    url(r'^api/venues/(\d+)/pics/$', views.PlacePic.as_view())
+    # url(r'^categories$', views.categories, {}, 'categories'),
+    # url(r'^nightlife$', views.nightlife, {}, 'nightlife'),
+    # url(r'^venue/(\d+)/$', views.venue, {}, 'venue'),
+    # url(r'^venue_json/(\d+)/$', views.venue_json, {}, 'venue_json'),
+    # url(r'^nightlife_json$', GetNightlifeList.as_view()),    
+    # url(r'^venue_list$', GetVenueList.as_view()),
+    # url(r'^', include('dataman.urls'))
 )
