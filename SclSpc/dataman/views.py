@@ -15,8 +15,8 @@ class PlaceList(APIView):
   List All Places
   """
   def get(self, request, format=None):
-    #places = Place.objects.filter(Q(foursq_primary_cat__name__contains='Bar')|Q(foursq_primary_cat__name__contains='Lounge')|Q(foursq_primary_cat__name__contains='Beer')).annotate(pic_count=Count('location__pic')).order_by('pic_count').reverse()[:10]
-    places = Place.objects.all()
+    places = Place.objects.filter(Q(foursq_primary_cat__name__contains='Bar')|Q(foursq_primary_cat__name__contains='Lounge')|Q(foursq_primary_cat__name__contains='Beer')).annotate(pic_count=Count('location__pic')).order_by('pic_count').reverse()[:10]
+    #places = Place.objects.all()
     serializer = PlaceSerializer(places, many=True)
     return Response(serializer.data)
 
